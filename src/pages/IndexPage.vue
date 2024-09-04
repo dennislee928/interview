@@ -1,22 +1,6 @@
 <template>
   <q-page padding>
     <q-form @submit="onSubmit">
-      <q-input
-        v-model="form.name"
-        label="姓名"
-        :rules="[(val) => !!val || '姓名不得空白']"
-        type="text"
-      />
-      <q-input
-        v-model="form.age"
-        label="年齡"
-        type="number"
-        :rules="[
-          (val) => !!val || '年齡不得空白',
-          (val) => val > 0 || '年齡必須是正整數',
-        ]"
-      />
-      <q-btn type="submit" label="新增" />
       <q-banner v-if="errorMessage" type="negative">{{
         errorMessage
       }}</q-banner>
@@ -75,6 +59,48 @@
             <q-btn @click="editDialog = false" label="取消" color="negative" />
           </q-form>
         </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <!-- 新增按鈕 -->
+    <q-btn label="新增" @click="showAddDialog = true" />
+
+    <!-- 新增的 Dialog -->
+    <q-dialog v-model="showAddDialog">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">新增資料</div>
+        </q-card-section>
+
+        <q-card-section>
+          <q-form @submit="handleAddSubmit">
+            <q-input
+              v-model="form.name"
+              label="姓名"
+              :rules="[(val) => !!val || '姓名不得空白']"
+              type="text"
+            />
+            <q-input
+              v-model="form.age"
+              label="年齡"
+              type="number"
+              :rules="[
+                (val) => !!val || '年齡不得空白',
+                (val) => val > 0 || '年齡必須是正整數',
+              ]"
+            />
+            <q-btn type="submit" label="確認" color="primary" />
+          </q-form>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="取消"
+            color="primary"
+            @click="showAddDialog = false"
+          />
+        </q-card-actions>
       </q-card>
     </q-dialog>
   </q-page>
@@ -144,6 +170,8 @@ export default {
         rowsPerPage: 5,
       },
       editDialog: false, // 控制編輯對話框的顯示
+      showAddDialog: false,
+      newData: '',
     };
   },
   methods: {
@@ -209,6 +237,19 @@ export default {
     openEditDialog(row) {
       this.form = { ...row }; // 將行資料複製到表單中
       this.editDialog = true; // 打開對話框
+    },
+    async handleAddSubmit() {
+      try {
+        const response = await axios.post(
+          'https://dahua.metcfire.com.tw/api/CRUDTest',
+          this.form
+        );
+        console.log('新增成功', response.data);
+        this.showAddDialog = false;
+        this.form = { name: '', age: null };
+      } catch (error) {
+        console.error('新增失敗', error);
+      }
     },
   },
   mounted() {
