@@ -93,12 +93,7 @@
 <script setup lang="ts">
 import { QTableProps } from 'quasar';
 import { ref } from 'vue';
-// 移除未使用的 axios 和 btnType
-// interface btnType {
-//   label: string;
-//   icon: string;
-//   status: string;
-// }
+
 const blockData = ref([
   {
     name: 'test',
@@ -138,7 +133,10 @@ const tempData = ref({
 });
 const isEdit = ref(false);
 
-function handleClickOption(btn, data) {
+function handleClickOption(
+  btn: { label: string; icon: string; status: string },
+  data: { name: string; age: number } // 指定 data 的具體類型
+) {
   // 使用 btn 和 data
   console.log(btn, data);
 }
