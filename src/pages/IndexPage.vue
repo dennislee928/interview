@@ -103,6 +103,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-btn label="更新" @click="fetchData" />
   </q-page>
 </template>
 
