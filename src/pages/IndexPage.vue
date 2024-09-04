@@ -39,7 +39,8 @@
 </template>
 
 <script>
-import { Dialog, QInput, QBtn, QForm, QPage, QTable, QBanner } from 'quasar';
+import { QInput, QBtn, QForm, QPage, QTable, QBanner } from 'quasar';
+import { Dialog } from 'quasar'; // 從 plugins 中導入
 import axios from 'axios';
 
 export default {
@@ -82,6 +83,7 @@ export default {
         page: 1,
         rowsPerPage: 5,
       },
+      selectedRowId: null, // 新增這行
     };
   },
   methods: {
