@@ -12,9 +12,18 @@
       row-key="id"
       :filter="filter"
       v-model:pagination="pagination"
+      :rows-per-page-options="[5, 10, 20]"
+      :sort-method="sortMethod"
     >
       <template v-slot:top>
-        <q-input v-model="filter" placeholder="搜尋..." outlined dense />
+        <q-input
+          round
+          dense
+          debounce="300"
+          v-model="filter"
+          placeholder="搜尋..."
+          class="q-mb-sm"
+        />
       </template>
       <template v-slot:body-cell-actions="props">
         <q-td :props="props">
@@ -51,7 +60,7 @@
               label="年齡"
               type="number"
               :rules="[
-                (val) => !!val || '年齡不得空白',
+                (val) => !!val || '���齡不得空白',
                 (val) => val > 0 || '年齡必須是正整數',
               ]"
             />
@@ -127,7 +136,7 @@ export default {
     QInput,
     QBtn,
     QForm,
-    QPage, // 確認這裡是 QPage 而不是 qPage
+    QPage,
     QTable,
     QBanner,
     QDialog,
@@ -154,10 +163,11 @@ export default {
         {
           name: 'age',
           required: true,
-          label: '年齡',
+          label: '年齡（按我可以排序：））',
           align: 'left',
           field: (row) => row.age,
           sortable: true,
+          sortMethod: (a, b) => a - b,
         },
         {
           name: 'actions',
@@ -248,8 +258,10 @@ export default {
         console.log('新增成功', response.data);
         this.showAddDialog = false;
         this.form = { name: '', age: null };
+        this.fetchData(); // 更新資料
       } catch (error) {
         console.error('新增失敗', error);
+        this.$q.notify({ type: 'negative', message: '新增失敗，請稍後再試' });
       }
     },
   },
