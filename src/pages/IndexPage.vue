@@ -2,9 +2,22 @@
   <q-page class="row q-pt-xl">
     <div class="full-width q-px-xl">
       <div class="q-mb-xl">
-        <q-input v-model="tempData.name" label="姓名" />
-        <q-input v-model="tempData.age" label="年齡" />
-        <q-btn color="primary" class="q-mt-md">新增</q-btn>
+        <q-input
+          v-model="tempData.name"
+          label="姓名"
+          :rules="[(val) => !!val || '姓名不得空白']"
+        />
+        <q-input
+          v-model="tempData.age"
+          label="年齡"
+          :rules="[
+            (val) => !!val || '年齡不得空白',
+            (val) => /^\d+$/.test(val) || '年齡限輸入數字',
+          ]"
+        />
+        <q-btn color="primary" class="q-mt-md" @click="handleSubmit">{{
+          isEdit ? '更新' : '新增'
+        }}</q-btn>
       </div>
 
       <q-table
@@ -78,14 +91,14 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import { QTableProps } from 'quasar';
 import { ref } from 'vue';
-interface btnType {
-  label: string;
-  icon: string;
-  status: string;
-}
+// 移除未使用的 axios 和 btnType
+// interface btnType {
+//   label: string;
+//   icon: string;
+//   status: string;
+// }
 const blockData = ref([
   {
     name: 'test',
@@ -123,8 +136,19 @@ const tempData = ref({
   name: '',
   age: '',
 });
+const isEdit = ref(false);
+
 function handleClickOption(btn, data) {
-  // ...
+  // 使用 btn 和 data
+  console.log(btn, data);
+}
+
+function handleSubmit() {
+  if (isEdit.value) {
+    // 更新邏輯
+  } else {
+    // 新增邏輯
+  }
 }
 </script>
 
